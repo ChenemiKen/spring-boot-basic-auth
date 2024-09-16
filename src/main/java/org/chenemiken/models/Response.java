@@ -1,15 +1,19 @@
 package org.chenemiken.models;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Response<T> {
-    private boolean success;
-    private String status;
-    private String message;
-    private T data;
+    protected boolean success;
+    protected ResponseStatus status;
+    protected String message;
+    protected T data;
+
+    public enum ResponseStatus{
+        ERROR, SUCCESS
+    };
 }

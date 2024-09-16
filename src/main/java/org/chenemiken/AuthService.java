@@ -1,5 +1,6 @@
 package org.chenemiken;
 
+import org.chenemiken.exceptions.ModelAlreadyExistException;
 import org.chenemiken.models.Response;
 import org.chenemiken.models.SignupRequest;
 import org.chenemiken.models.SignupResponse;
@@ -17,18 +18,18 @@ public class AuthService {
     }
     public Response<SignupResponse> signup(SignupRequest request){
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
-            throw new RuntimeException("Email already registered");
+            throw new ModelAlreadyExistException("Email already registered");
         });
 
         User newUser = new User();
         newUser.setEmail(request.getEmail());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
 
-//    newUser = userRepository.save(newUser);
+        newUser = userRepository.save(newUser);
 
         return Response.<SignupResponse>builder()
                 .success(true)
-                .status("successful")
+                .status(Response.ResponseStatus.SUCCESS)
                 .message("user registered successfully")
                 .data(new SignupResponse(newUser.getEmail()))
                 .build();
